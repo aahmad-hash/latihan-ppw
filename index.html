@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Praktikum JavaScript Event</title>
+    <style>
+      /* Modern Reset & Variabel */
+      :root {
+        --bg-color: #f4f7f6;
+        --card-bg: #ffffff;
+        --primary: #003cff;
+        --primary-hover: #ff039a;
+        --text-main: #1f2937;
+        --text-muted: #4b5563;
+        --border: #0055ff;
+        --radius: 12px;
+        --shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        padding: 40px 20px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .container {
+        max-width: 800px;
+        width: 100%;
+      }
+
+      /* Header */
+      header {
+        margin-bottom: 32px;
+        text-align: center;
+      }
+
+      header h1 {
+        font-size: 2.2rem;
+        color: #0d00ff;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      header p {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+      }
+
+      /* Grid Layout untuk Event Cards */
+      .event-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 24px;
+        margin-bottom: 40px;
+      }
+
+      /* Modern Card Style */
+      .card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        box-shadow: var(--shadow);
+      }
+
+      .card h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #325296;
+        border-left: 4px solid var(--primary);
+        padding-left: 10px;
+      }
+
+      /* Form Controls */
+      .form-group {
+        margin-bottom: 16px;
+      }
+
+      label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: var(--text-muted);
+      }
+
+      input[type="text"],
+      select {
+        width: 100%;
+        padding: 10px 14px;
+        font-size: 0.95rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background-color: #fff;
+        color: var(--text-main);
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+
+      input[type="text"]:focus,
+      select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
+
+      button[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      button[type="submit"]:hover {
+        background-color: var(--primary-hover);
+      }
+
+      /* Mouse Event Specific Component */
+      .box {
+        width: 100%;
+        height: 140px;
+        background-color: var(--primary);
+        color: white;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+        transition:
+          background-color 0.3s,
+          transform 0.2s;
+      }
+
+      .box:active {
+        transform: scale(0.98);
+      }
+
+      /* Keyboard Output Badge */
+      .badge {
+        display: inline-block;
+        background: #f3f4f6;
+        border: 1px solid var(--border);
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-family: monospace;
+        color: #db2777;
+        font-size: 1rem;
+      }
+
+      /* Modern Floating Window Status */
+      #log-window {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 12px 18px;
+        border-radius: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        font-size: 0.85rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      #statusWindow {
+        color: var(--primary);
+        font-weight: 600;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Eksperimen JavaScript Events</h1>
+        <p>Mouse Events, Keyboard Events, Form Events, dan Window Events</p>
+      </header>
+
+      <main class="event-grid">
+        <section class="card">
+          <h2>1. Mouse Events</h2>
+          <div id="kotakInteraktif" class="box">Arahkan Mouse Ke Sini</div>
+          
+        </section>
+
+        <section class="card">
+          <h2>2. Keyboard Events</h2>
+          <div class="form-group">
+            <label for="inputKetikan">Ketik sesuatu di bawah ini:</label>
+            <input
+              type="text"
+              id="inputKetikan"
+              placeholder="Tekan tombol apapun..."
+            />
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-muted)">
+            Tombol terakhir: <span id="outputTombol" class="badge">-</span>
+          </p>
+        </section>
+
+        <section class="card" style="grid-column: span 1">
+          <h2>3. Form Events</h2>
+          <form id="formPendaftaran">
+            <div class="form-group">
+              <label for="inputNama">Nama Lengkap</label>
+              <input
+                type="text"
+                id="inputNama"
+                required
+                placeholder="Masukkan nama Anda"
+              />
+            </div>
+            <div class="form-group">
+              <label for="pilihanJurusan">Jurusan</label>
+              <select id="pilihanJurusan">
+                <option value="">-- Pilih Jurusan --</option>
+                <option value="Teknik Informatika">Teknik Informatika</option>
+                <option value="Sistem Informasi">Sistem Informasi</option>
+              </select>
+            </div>
+            <button type="submit">Kirim Data</button>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <div id="log-window">
+      <span>🌐 Status Jendela:</span>
+      <span id="statusWindow">Menunggu Resize...</span>
+    </div>
+
+    <script src="mouse-event.js"></script>
+    <script src="keyborad-events.js"></script>
+    <script src="form-events.js"></script>
+    <script src="window-events.js"></script>
+  </body>
+</html>
